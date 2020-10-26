@@ -20,7 +20,7 @@ class Home extends StatelessWidget {
                 onPressed: () => showDialog(
                     context: context,
                     child: Container(
-                      height: 200,
+                      height: 100,
                       child: AlertDialog(
                         backgroundColor: Color.fromRGBO(0, 0, 0, 80),
                         title: Text(
@@ -42,6 +42,8 @@ class Home extends StatelessWidget {
                                 style: TextStyle(color: Colors.redAccent[700]),
                               ),
                               Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   FlatButton(
                                       color: difficolta == 4
@@ -56,24 +58,6 @@ class Home extends StatelessWidget {
                                           "facile",
                                           style: TextStyle(
                                             color: difficolta == 4
-                                                ? Colors.black
-                                                : Colors.redAccent[700],
-                                          ),
-                                        ),
-                                      )),
-                                  FlatButton(
-                                      color: difficolta == 8
-                                          ? Colors.redAccent[700]
-                                          : Colors.black,
-                                      onPressed: () {
-                                        difficolta = 8;
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: Container(
-                                        child: Text(
-                                          "medio",
-                                          style: TextStyle(
-                                            color: difficolta == 8
                                                 ? Colors.black
                                                 : Colors.redAccent[700],
                                           ),
@@ -98,7 +82,25 @@ class Home extends StatelessWidget {
                                         ),
                                       )),
                                 ],
-                              )
+                              ),
+                              FlatButton(
+                                  color: difficolta == 8
+                                      ? Colors.redAccent[700]
+                                      : Colors.black,
+                                  onPressed: () {
+                                    difficolta = 8;
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Container(
+                                    child: Text(
+                                      "medio",
+                                      style: TextStyle(
+                                        color: difficolta == 8
+                                            ? Colors.black
+                                            : Colors.redAccent[700],
+                                      ),
+                                    ),
+                                  )),
                             ],
                           ),
                         ),

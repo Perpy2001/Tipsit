@@ -7,7 +7,8 @@ import 'gamecontainer.dart';
 
 class Game extends StatefulWidget {
   Game({Key key}) : super(key: key);
-
+  static _GameState of(BuildContext context) =>
+      context.findAncestorStateOfType<_GameState>();
   @override
   _GameState createState() => _GameState();
 }
@@ -15,6 +16,7 @@ class Game extends StatefulWidget {
 class _GameState extends State<Game> {
   Stream<int> getRandomValues() async* {
     var random = Random();
+
     while (play) {
       await Future.delayed(Duration(milliseconds: 700));
       yield random.nextInt(5);
@@ -130,8 +132,9 @@ class _GameState extends State<Game> {
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: difficolta,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: scegliDifficolta(difficolta)),
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: scegliDifficolta(difficolta).toDouble(),
+                ),
                 itemBuilder: (context, index) {
                   return StreamBuilder(
                     stream: getRandomValues(),
@@ -160,7 +163,7 @@ class _GameState extends State<Game> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(9.0),
                 child: RaisedButton(
                   onPressed: () {
                     return updatePlay();
@@ -181,9 +184,9 @@ class _GameState extends State<Game> {
 }
 
 int scegliDifficolta(int dif) {
-  if (dif == 4) return 4;
-  if (dif == 8) return 4;
-  if (dif == 20) return 5;
+  if (dif == 4) return 200;
+  if (dif == 8) return 100;
+  if (dif == 20) return 80;
 }
 
 int difficolta = 20;
