@@ -129,12 +129,12 @@ class _GameState extends State<Game> {
           Container(
             color: Colors.black,
             child: GridView.builder(
-                physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
                 itemCount: difficolta,
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: scegliDifficolta(difficolta).toDouble(),
-                ),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: difficolta == 4 ? 1.21 : 1,
+                    crossAxisCount: scegliDifficolta(difficolta)),
                 itemBuilder: (context, index) {
                   return StreamBuilder(
                     stream: getRandomValues(),
@@ -184,9 +184,9 @@ class _GameState extends State<Game> {
 }
 
 int scegliDifficolta(int dif) {
-  if (dif == 4) return 200;
-  if (dif == 8) return 100;
-  if (dif == 20) return 80;
+  if (dif == 4) return 2;
+  if (dif == 8) return 4;
+  if (dif == 20) return 5;
 }
 
 int difficolta = 20;
