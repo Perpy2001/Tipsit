@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:Chat_Perpignano/data/data.dart';
@@ -79,6 +80,10 @@ class _HomeState extends State<Home> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   messaggioSet.add(String.fromCharCodes(snapshot.data));
+                  Timer(
+                      Duration(milliseconds: 300),
+                      () => _scrollController
+                          .jumpTo(_scrollController.position.maxScrollExtent));
                   return Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Container(
@@ -88,15 +93,14 @@ class _HomeState extends State<Home> {
                         ),
                         height: MediaQuery.of(context).size.height * 0.70,
                         child: ListView.builder(
-                          controller: _scrollController,
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: messaggioSet.length - 1,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Messaggio(
-                                messaggio: messaggioSet.elementAt(index + 1));
-                          },
-                        ),
+                            controller: _scrollController,
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: messaggioSet.length - 1,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Messaggio(
+                                  messaggio: messaggioSet.elementAt(index + 1));
+                            }),
                       ));
                 } else
                   return Text("");
@@ -142,7 +146,6 @@ class _HomeState extends State<Home> {
       messaggioSet.add("Tu:1\n" + _controller.text);
       _controller.clear();
     }
-    _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
   }
 
   @override

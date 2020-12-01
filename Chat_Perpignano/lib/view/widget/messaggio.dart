@@ -2,6 +2,9 @@ import 'dart:math';
 
 import 'package:Chat_Perpignano/data/data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_bubble/bubble_type.dart';
+import 'package:flutter_chat_bubble/chat_bubble.dart';
+import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_3.dart';
 
 class Messaggio extends StatelessWidget {
   final String messaggio;
@@ -20,35 +23,25 @@ class Messaggio extends StatelessWidget {
       testo = messaggio.substring(4);
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment:
-            me ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: me ? Colors.cyan : Colors.greenAccent,
-              borderRadius: BorderRadius.circular(30.0),
+      padding: EdgeInsets.fromLTRB(8, 6, 8, 3),
+      child: ChatBubble(
+          backGroundColor: me ? Colors.blueAccent : Colors.greenAccent,
+          alignment: me ? Alignment.topRight : Alignment.topLeft,
+          clipper: ChatBubbleClipper3(
+              type: me ? BubbleType.sendBubble : BubbleType.receiverBubble),
+          child: Container(
+            child: Column(
+              children: [
+                Text(me ? "Tu" : "$userName",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.black)),
+                SizedBox(
+                  height: 6,
+                ),
+                Text(testo)
+              ],
             ),
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(8, 3, 8, 6),
-              child: Column(
-                children: [
-                  Text(me ? "Tu" : "$userName",
-                      textAlign: me ? TextAlign.right : TextAlign.left,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.black)),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(testo)
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
+          )),
     );
   }
 }
