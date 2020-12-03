@@ -103,7 +103,18 @@ class _HomeState extends State<Home> {
                             }),
                       ));
                 } else
-                  return Text("");
+                  return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Container(
+                        width: MediaQuery.of(context).size.height * 0.70,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        height: MediaQuery.of(context).size.height * 0.70,
+                        child:
+                            Center(child: Text("NON SEI CONNESSO AL SERVER")),
+                      ));
               },
             ),
             Container(
