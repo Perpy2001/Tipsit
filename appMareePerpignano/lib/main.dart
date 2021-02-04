@@ -1,8 +1,11 @@
 import 'dart:async';
 
+
+import 'package:am029_maree/previsioni.dart';
 import 'package:am029_maree/stazione.dart';
 import 'package:flutter/material.dart';
-import 'package:sensors/sensors.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 
 import 'data.dart';
 
@@ -14,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'APP MAREE',
       theme: ThemeData(
-        primarySwatch: Colors.purple,
+        primarySwatch: Colors.red,
       ),
       home: MyHomePage(title: 'APP MAREE'),
     );
@@ -31,21 +34,48 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  StreamSubscription _userAccelerometerSub;
+  Set<Marker> _markers = {};
+  List<Data> data;
+  Timer timer;
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
+
+  Future<void> getData() async {
+    data = await fetchDataList();
+    setState(() {
+      for (Data staz in data) {
+        _markers.add(Marker(
+            onTap: () {
+              return Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Stazione(data: staz)));
+            },
+            markerId: MarkerId(staz.idStazione),
+            position:
+                LatLng(double.parse(staz.latDDN), double.parse(staz.lonDDE)),
+            infoWindow: InfoWindow(
+              title: staz.stazione,
+              snippet: staz.valore,
+            )));
+      }
+    });
+  }
+
+  /*void _setMarkerIcon() async {
+    _markerIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(), 'assets/bb.png');
+  }*/
+
+  /*Future<void> _onMapCreated(GoogleMapController contr) async {
+    await getData();
+  }*/
 
   @override
   void initState() {
-    _userAccelerometerSub =
-        userAccelerometerEvents.listen((UserAccelerometerEvent event) {
-      // vertical gesture
-    });
     super.initState();
-  }
 
-  @override
-  void dispose() {
-    _userAccelerometerSub.cancel();
-    super.dispose();
+    getData();
+    timer = Timer.periodic(Duration(minutes: 1), (Timer t) => getData());
   }
 
   @override
@@ -54,31 +84,47 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('lib/assets/laguna.jpg'),
-            fit: BoxFit.cover
+      body: Stack(
+        children: [
+          GoogleMap(
+            markers: _markers,
+            initialCameraPosition: CameraPosition(
+              target: LatLng(45.43639875136951, 12.327309251523655),
+              zoom: 13,
+            ),
           ),
-        ),
-        child: Center(
-          child: FutureBuilder(
-            future: fetchDataList(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Stazione(
-                        data: snapshot.data[index],
-                      );
-                    });
-              } else
-                return Text("Caricamento...");
-            },
-          ),
-        ),
+                    Positioned(
+              top: MediaQuery.of(context).size.width * 0.055,
+              right: MediaQuery.of(context).size.width * 0.045,
+              child: IconButton(
+                iconSize: 40,
+                onPressed: () {
+                  return Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Previsioni()));
+                },
+                icon: Icon(
+                  
+                  Icons.assessment_rounded,
+                  color:Colors.black,
+                ),
+              )),
+          Positioned(
+              top: MediaQuery.of(context).size.width * 0.05,
+              right: MediaQuery.of(context).size.width * 0.05,
+              child: IconButton(
+                iconSize: 40,
+                onPressed: () {
+                  return Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Previsioni()));
+                },
+                icon: Icon(
+                  
+                  Icons.assessment_rounded,
+                  color:Color(0xff23b6e6),
+                ),
+              )),
+
+        ],
       ),
     );
   }
