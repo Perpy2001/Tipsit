@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "525235139307",
+    "project_id": "appmemoxp",
+    "storage_bucket": "appmemoxp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:525235139307:android:759760e18f8e817c9004ae",
+        "android_client_info": {
+          "package_name": "com.thexp.app_memo_xp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "525235139307-errf9leepn80k2l79mjh96asjcej9fa7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thexp.app_memo_xp",
+            "certificate_hash": "62df907a5b4f3870f35b7cc010b9399777425cf3"
+          }
+        },
+        {
+          "client_id": "525235139307-guk5auuul2k2f4r0caig7emavt8uitlv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqXnNjVotdoQEi21y_SVN0sZ3mkL2DsJU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "525235139307-guk5auuul2k2f4r0caig7emavt8uitlv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
