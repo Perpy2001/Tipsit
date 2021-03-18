@@ -1,5 +1,4 @@
 
-
 import 'package:app_memo_xp/widget/costum_drower.dart';
 import 'package:app_memo_xp/widget/memocard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,17 +6,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class Home extends StatefulWidget {
-  Home({Key key}) : super(key: key);
+class YourHome extends StatefulWidget {
+  YourHome({Key key}) : super(key: key);
 
   @override
-  _HomeState createState() => _HomeState();
+  _YourHomeState createState() => _YourHomeState();
 }
 
-class _HomeState extends State<Home> {
-  CollectionReference _colecMemo;
-
-
+class _YourHomeState extends State<YourHome> {
+ CollectionReference _colecMemo;
+  final user = FirebaseAuth.instance.currentUser;
   @override
   void initState() {
     getColec();
@@ -28,10 +26,10 @@ class _HomeState extends State<Home> {
     _colecMemo = FirebaseFirestore.instance.collection("Memo");
   }
 
-
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
+
+  
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -113,7 +111,7 @@ class _HomeState extends State<Home> {
       drawer: CostumDrower(),
       body: Container(
         child: StreamBuilder(
-          stream: _colecMemo.snapshots(),
+          stream: _colecMemo.where("accaunt",isEqualTo: user.email).snapshots(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               return Container(

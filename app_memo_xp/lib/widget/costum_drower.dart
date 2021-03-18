@@ -1,16 +1,18 @@
+import 'package:app_memo_xp/pages/home.dart';
+import 'package:app_memo_xp/pages/ricerca.dart';
+import 'package:app_memo_xp/pages/yourMemo.dart';
 import 'package:app_memo_xp/provider/g_singin.dart';
 import 'package:app_memo_xp/widget/user_data.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 class CostumDrower extends StatelessWidget {
   const CostumDrower({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-       final user = FirebaseAuth.instance.currentUser;
+    final user = FirebaseAuth.instance.currentUser;
     return Container(
       color: Colors.white,
       child: Column(children: [
@@ -23,13 +25,13 @@ class CostumDrower extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 50.0,
-                   backgroundImage: NetworkImage(user.photoURL),
+                  backgroundImage: NetworkImage(user.photoURL),
                 ),
                 SizedBox(
                   height: 5.0,
                 ),
                 Text(
-               user.displayName,
+                  user.displayName,
                   style: TextStyle(
                     fontSize: 22.0,
                     fontWeight: FontWeight.w800,
@@ -39,7 +41,7 @@ class CostumDrower extends StatelessWidget {
                   height: 5.0,
                 ),
                 Text(
-                 user.email ,
+                  user.email,
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.w400,
@@ -55,9 +57,9 @@ class CostumDrower extends StatelessWidget {
         ListTile(
           onTap: () {
             Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => UserPage()),
-  );
+              context,
+              MaterialPageRoute(builder: (context) => UserPage()),
+            );
           },
           leading: Icon(
             Icons.person,
@@ -65,7 +67,45 @@ class CostumDrower extends StatelessWidget {
           ),
           title: Text("Profilo"),
         ),
-
+        ListTile(
+          onTap: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Home()),
+            );
+          },
+          leading: Icon(
+            Icons.home,
+            color: Colors.black,
+          ),
+          title: Text("Home"),
+        ),
+        ListTile(
+          onTap: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Ricerca()),
+            );
+          },
+          leading: Icon(
+            Icons.search,
+            color: Colors.black,
+          ),
+          title: Text("Ricerca"),
+        ),
+        ListTile(
+          onTap: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => YourHome()),
+            );
+          },
+          leading: Icon(
+            Icons.text_fields,
+            color: Colors.black,
+          ),
+          title: Text("Le Tue Note"),
+        ),
         ListTile(
           onTap: () {},
           leading: Icon(
@@ -74,12 +114,11 @@ class CostumDrower extends StatelessWidget {
           ),
           title: Text("Preferetiti"),
         ),
-
         ListTile(
           onTap: () {
-                          final provider =
-                    Provider.of<GoogleSingInProvider>(context, listen: false);
-                provider.logout();
+            final provider =
+                Provider.of<GoogleSingInProvider>(context, listen: false);
+            provider.logout();
           },
           leading: Icon(
             Icons.logout,
@@ -91,5 +130,3 @@ class CostumDrower extends StatelessWidget {
     );
   }
 }
-
-  

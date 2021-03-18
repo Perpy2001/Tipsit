@@ -1,5 +1,3 @@
-
-
 import 'package:app_memo_xp/widget/costum_drower.dart';
 import 'package:app_memo_xp/widget/memocard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,17 +5,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class Home extends StatefulWidget {
-  Home({Key key}) : super(key: key);
+class Ricerca extends StatefulWidget {
+  Ricerca({Key key}) : super(key: key);
 
   @override
-  _HomeState createState() => _HomeState();
+  _RicercaState createState() => _RicercaState();
 }
 
-class _HomeState extends State<Home> {
+class _RicercaState extends State<Ricerca> {
   CollectionReference _colecMemo;
-
-
+  final user = FirebaseAuth.instance.currentUser;
+  final _controllerRicerca = TextEditingController();
   @override
   void initState() {
     getColec();
@@ -28,11 +26,11 @@ class _HomeState extends State<Home> {
     _colecMemo = FirebaseFirestore.instance.collection("Memo");
   }
 
-
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
+            resizeToAvoidBottomInset: false,
+
       appBar: AppBar(
         actions: [
           Text("Memo"),
@@ -94,7 +92,7 @@ class _HomeState extends State<Home> {
                                   "titolo": _controllerTitolo.text,
                                   "body": _controllerBody.text,
                                   "accaunt": user.email,
-                                  "tags":[]
+                                  "tags": []
                                 });
                                 Navigator.of(context).pop();
                               },
@@ -112,35 +110,61 @@ class _HomeState extends State<Home> {
       ),
       drawer: CostumDrower(),
       body: Container(
-        child: StreamBuilder(
-          stream: _colecMemo.snapshots(),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              return Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom: BorderSide(color: Colors.black, width: 2))),
-                child: ListView(
-                  children: snapshot.data.docs.map<Widget>((doc) {
-                    bool me = false;
-                    if (doc.data()["accaunt"] == user.email) {
-                      me = true;
-                    }
-                   
-                    return MemoCard(
-                     docName: doc.id,
-                     tags: doc.data()["tags"],
-                      me: me,
-                      titolo: doc.data()["titolo"],
-                      accaunt: doc.data()["accaunt"],
-                      body: doc.data()["body"],
-                    );
-                  }).toList(),
-                ),
-              );
-            }
-            return Container();
-          },
+        child: Column(
+          children: [
+            Container(
+              child: Row(
+                
+                children: [
+                  Icon(Icons.search),
+                  Text("tags:"),
+                  Container(
+                    width: MediaQuery.of(context).size.width*0.80 ,
+                    height: 50,
+                    child: TextField(
+                        controller: _controllerRicerca,
+                        keyboardType: TextInputType.text,
+                        onSubmitted: (value) {
+                          setState(() {});
+                        }),
+                  ),
+                ],
+              ),
+            ),
+            StreamBuilder(
+              stream: _colecMemo.where("tags",
+                  arrayContainsAny: [_controllerRicerca.text]).snapshots(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  return Container(
+                    height: MediaQuery.of(context).size.height*0.80,
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(color: Colors.black, width: 2))),
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: snapshot.data.docs.map<Widget>((doc) {
+                        bool me = false;
+                        if (doc.data()["accaunt"] == user.email) {
+                          me = true;
+                        }
+
+                        return MemoCard(
+                          docName: doc.id,
+                          tags: doc.data()["tags"],
+                          me: me,
+                          titolo: doc.data()["titolo"],
+                          accaunt: doc.data()["accaunt"],
+                          body: doc.data()["body"],
+                        );
+                      }).toList(),
+                    ),
+                  );
+                }
+                return Container();
+              },
+            ),
+          ],
         ),
       ),
     );

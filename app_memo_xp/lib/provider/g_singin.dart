@@ -1,53 +1,51 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class GoogleSingInProvider  extends   ChangeNotifier{
-  final gogleSingIn=GoogleSignIn();
+class GoogleSingInProvider extends ChangeNotifier {
+  final gogleSingIn = GoogleSignIn();
   bool _isSingingIn;
 
-  GoogleSingInProvider(){
-    _isSingingIn=false;
+  GoogleSingInProvider() {
+    _isSingingIn = false;
   }
-bool get isSingingIn=>_isSingingIn;
+  bool get isSingingIn => _isSingingIn;
 
-set isSingingIn(bool isSingingIn){
-  _isSingingIn =isSingingIn;
-  notifyListeners();
-}
+  set isSingingIn(bool isSingingIn) {
+    _isSingingIn = isSingingIn;
+    notifyListeners();
+  }
 
-  Future login() async{
-_isSingingIn = true;
-final user = await gogleSingIn.signIn();
-if(user == null ){
-  isSingingIn=false;
-  return;
-}else{ 
-final googleAuth= await user.authentication;
-
-
-
-final credential = GoogleAuthProvider.credential(
+  Future login() async {
+    _isSingingIn = true;
+    final user = await gogleSingIn.signIn();
+    if (user == null) {
+      isSingingIn = false;
+      return;
+    } else {
+      final googleAuth = await user.authentication;
+      final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-            await FirebaseAuth.instance.signInWithCredential(credential);
+      await FirebaseAuth.instance.signInWithCredential(credential);
 
+          FirebaseFirestore.instance.collection("Persona").doc(user.id).set({
+            "email" : user.email,
+            "nome"  : user.displayName,
+            "profilePic" : user.photoUrl
+          });
       isSingingIn = false;
-      
-      }
-      
-  }
-  void logout() async {
-    try{
-    FirebaseAuth.instance.signOut();
-    await gogleSingIn.disconnect();
     }
-    catch (e){
+  }
+
+  void logout() async {
+    try {
+      FirebaseAuth.instance.signOut();
+      await gogleSingIn.disconnect();
+    } catch (e) {
       print(e.toString());
     }
-
   }
-
-
- }
+}
