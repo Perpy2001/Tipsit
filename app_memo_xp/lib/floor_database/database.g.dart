@@ -66,6 +66,8 @@ class _$AppDatabase extends AppDatabase {
 
   TagsDao _tagsDaoInstance;
 
+  FavoritesDao _favoritesDaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
@@ -89,6 +91,8 @@ class _$AppDatabase extends AppDatabase {
             'CREATE TABLE IF NOT EXISTS `Memo` (`id` INTEGER, `mail` TEXT, `titolo` TEXT, `body` TEXT, `categoria` TEXT, `data` TEXT, `name` TEXT, `tags` TEXT, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Tags` (`id` TEXT, `tag` TEXT, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `Favorites` (`id` TEXT, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -109,6 +113,11 @@ class _$AppDatabase extends AppDatabase {
   @override
   TagsDao get tagsDao {
     return _tagsDaoInstance ??= _$TagsDao(database, changeListener);
+  }
+
+  @override
+  FavoritesDao get favoritesDao {
+    return _favoritesDaoInstance ??= _$FavoritesDao(database, changeListener);
   }
 }
 
@@ -340,5 +349,56 @@ class _$TagsDao extends TagsDao {
   @override
   Future<void> insertTags(Tags person) async {
     await _tagsInsertionAdapter.insert(person, OnConflictStrategy.abort);
+  }
+}
+
+class _$FavoritesDao extends FavoritesDao {
+  _$FavoritesDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database, changeListener),
+        _favoritesInsertionAdapter = InsertionAdapter(
+            database,
+            'Favorites',
+            (Favorites item) => <String, dynamic>{'id': item.id},
+            changeListener),
+        _favoritesDeletionAdapter = DeletionAdapter(
+            database,
+            'Favorites',
+            ['id'],
+            (Favorites item) => <String, dynamic>{'id': item.id},
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Favorites> _favoritesInsertionAdapter;
+
+  final DeletionAdapter<Favorites> _favoritesDeletionAdapter;
+
+  @override
+  Future<List<Favorites>> findAllFavorites() async {
+    return _queryAdapter.queryList('SELECT * FROM Favorites',
+        mapper: (Map<String, dynamic> row) => Favorites(row['id'] as String));
+  }
+
+  @override
+  Stream<Favorites> findFavoritesById(String id) {
+    return _queryAdapter.queryStream('SELECT * FROM Favorites WHERE id = ?',
+        arguments: <dynamic>[id],
+        queryableName: 'Favorites',
+        isView: false,
+        mapper: (Map<String, dynamic> row) => Favorites(row['id'] as String));
+  }
+
+  @override
+  Future<void> insertFavorites(Favorites favorite) async {
+    await _favoritesInsertionAdapter.insert(favorite, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteFavorite(Favorites favorite) async {
+    await _favoritesDeletionAdapter.delete(favorite);
   }
 }

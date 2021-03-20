@@ -2,6 +2,8 @@
 
 // required package imports
 import 'dart:async';
+import 'package:app_memo_xp/floor_database/daos/favorites_dao.dart';
+import 'package:app_memo_xp/floor_database/entities/favorites.dart';
 import 'package:app_memo_xp/floor_database/entities/pearson.dart';
 import 'package:floor/floor.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
@@ -14,9 +16,10 @@ import 'entities/tags.dart';
 
 part 'database.g.dart'; // the generated code will be there
 
-@Database(version: 1, entities: [Person, Memo, Tags])
+@Database(version: 1, entities: [Person, Memo, Tags,Favorites])
 abstract class AppDatabase extends FloorDatabase {
   PersonDao get personDao;
   MemoDao get memoDao;
   TagsDao get tagsDao;
+  FavoritesDao get favoritesDao;
 }

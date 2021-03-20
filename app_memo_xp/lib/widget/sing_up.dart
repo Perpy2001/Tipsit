@@ -22,6 +22,7 @@ class SingUp extends StatelessWidget {
        Center(
          child: Container(
            
+           // ignore: deprecated_member_use
            child: OutlineButton.icon(
              
              highlightColor: Colors.blueGrey.shade900 ,

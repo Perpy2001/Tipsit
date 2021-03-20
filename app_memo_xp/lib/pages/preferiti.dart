@@ -1,4 +1,5 @@
 import 'package:app_memo_xp/floor_database/database.dart';
+import 'package:app_memo_xp/floor_database/entities/favorites.dart';
 import 'package:app_memo_xp/widget/addMemo.dart';
 import 'package:app_memo_xp/widget/costum_drower.dart';
 import 'package:app_memo_xp/widget/memocard.dart';
@@ -7,21 +8,24 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class Home extends StatefulWidget {
-  Home({Key key}) : super(key: key);
+class Preferiti extends StatefulWidget {
+  final AppDatabase database;
+
+  Preferiti({Key key, this.database}) : super(key: key);
 
   @override
-  _HomeState createState() => _HomeState();
+  _PreferitiState createState() => _PreferitiState();
 }
 
-class _HomeState extends State<Home> {
+class _PreferitiState extends State<Preferiti> {
   CollectionReference _colecMemo;
+  final user = FirebaseAuth.instance.currentUser;
+  List<String> favorites = [];
   AppDatabase database;
-
   @override
   void initState() {
-    getDatabase();
     getColec();
+    getFavorites();
     super.initState();
   }
 
@@ -29,14 +33,19 @@ class _HomeState extends State<Home> {
     _colecMemo = FirebaseFirestore.instance.collection("Memo");
   }
 
-  getDatabase() async {
+  getFavorites() async {
+    List<Favorites> favoritesF;
     database =
         await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+    final favoritesDao = database.favoritesDao;
+    favoritesF = await favoritesDao.findAllFavorites();
+    for (Favorites f in favoritesF) {
+      favorites.add(f.id);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -47,14 +56,12 @@ class _HomeState extends State<Home> {
                 return showDialog(
                     context: context,
                     builder: (context) {
-                      return AddMemo(colec: _colecMemo, user:user);
+                      return AddMemo(colec: _colecMemo, user: user);
                     });
               })
         ],
       ),
-      drawer: CostumDrower(
-        database: database,
-      ),
+      drawer: CostumDrower(),
       body: Container(
         child: StreamBuilder(
           stream: _colecMemo.orderBy("date").snapshots(),
@@ -66,25 +73,25 @@ class _HomeState extends State<Home> {
                         bottom: BorderSide(color: Colors.black, width: 2))),
                 child: ListView(
                   children: snapshot.data.docs.map<Widget>((doc) {
-                    if(doc.data()["private"]==true&&user.email!=doc.data()["accaunt"]){
-                    return Container();
-                    }
-                    bool me = false;
-                    if (doc.data()["accaunt"] == user.email) {
-                      me = true;
-                    }
+                    if (favorites.contains(doc.id)) {
+                      bool me = false;
+                      if (doc.data()["accaunt"] == user.email) {
+                        me = true;
+                      }
 
-                    return MemoCard(
+                      return MemoCard(
                       date: doc.data()["date"],
-                      private: doc.data()["private"],
-                      database: database,
-                      docName: doc.id,
-                      tags: doc.data()["tags"],
-                      me: me,
-                      titolo: doc.data()["titolo"],
-                      accaunt: doc.data()["accaunt"],
-                      body: doc.data()["body"],
-                    );
+                        private: doc.data()["private"],
+                        database: database,
+                        docName: doc.id,
+                        tags: doc.data()["tags"],
+                        me: me,
+                        titolo: doc.data()["titolo"],
+                        accaunt: doc.data()["accaunt"],
+                        body: doc.data()["body"],
+                      );
+                    }
+                    return Container();
                   }).toList(),
                 ),
               );

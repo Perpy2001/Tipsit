@@ -1,4 +1,6 @@
+import 'package:app_memo_xp/floor_database/database.dart';
 import 'package:app_memo_xp/pages/home.dart';
+import 'package:app_memo_xp/pages/preferiti.dart';
 import 'package:app_memo_xp/pages/ricerca.dart';
 import 'package:app_memo_xp/pages/yourMemo.dart';
 import 'package:app_memo_xp/provider/g_singin.dart';
@@ -8,7 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CostumDrower extends StatelessWidget {
-  const CostumDrower({Key key}) : super(key: key);
+   final AppDatabase database;
+
+  const CostumDrower({Key key,this.database}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +88,7 @@ class CostumDrower extends StatelessWidget {
           onTap: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => Ricerca()),
+              MaterialPageRoute(builder: (context) => Ricerca(database: database,)),
             );
           },
           leading: Icon(
@@ -97,7 +101,7 @@ class CostumDrower extends StatelessWidget {
           onTap: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => YourHome()),
+              MaterialPageRoute(builder: (context) => YourHome(database: database,)),
             );
           },
           leading: Icon(
@@ -107,7 +111,11 @@ class CostumDrower extends StatelessWidget {
           title: Text("Le Tue Note"),
         ),
         ListTile(
-          onTap: () {},
+          onTap: () {
+                        Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Preferiti(database: database,)),);
+          },
           leading: Icon(
             Icons.star,
             color: Colors.black,
