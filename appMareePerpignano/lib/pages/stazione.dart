@@ -1,4 +1,5 @@
-import 'package:am029_maree/data.dart';
+import 'package:am029_maree/class/data.dart';
+import 'package:am029_maree/class/dataRepos.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 

@@ -208,7 +208,7 @@ class _MemoCardState extends State<MemoCard> {
                     child: Row(
                       children: [
                         Container(
-                            width: MediaQuery.of(context).size.width * 0.85,
+                            width: MediaQuery.of(context).size.width * 0.70,
                             color: Color.fromRGBO(245, 245, 245, 0.7),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -233,7 +233,7 @@ class _MemoCardState extends State<MemoCard> {
                                             child: Text("Aggiungi un Tag")),
                                         content: Container(
                                           height: 30,
-                                          width: 100,
+                                          width: 80,
                                           child: TextField(
                                             controller: _controllerTag,
                                             keyboardType: TextInputType.text,
@@ -276,7 +276,7 @@ class _MemoCardState extends State<MemoCard> {
                               })
                           : Container(),
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.69,
+                        width: MediaQuery.of(context).size.width * 0.60,
                         child: Tags(
                           alignment: WrapAlignment.start,
                           runAlignment: WrapAlignment.start,
@@ -306,7 +306,7 @@ class _MemoCardState extends State<MemoCard> {
                         ),
                       ),
                       Spacer(),
-                      Container(
+                      widget.me?Container(
                         width: 20,
                         height: 20,
                         child: Center(
@@ -323,7 +323,7 @@ class _MemoCardState extends State<MemoCard> {
                                     .delete();
                               }),
                         ),
-                      ),
+                      ):Container(),
                     ],
                   ),
                 ],

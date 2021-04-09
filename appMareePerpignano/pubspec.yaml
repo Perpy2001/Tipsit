@@ -22,6 +22,8 @@ dependencies:
   liquid_progress_indicator: ^0.3.2
   google_maps_flutter: ^1.1.1
   fl_chart: ^0.12.2
+  bloc: ^7.0.0
+  flutter_bloc: ^7.0.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2

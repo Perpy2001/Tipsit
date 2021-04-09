@@ -1,13 +1,15 @@
 import 'dart:async';
 
-
-import 'package:am029_maree/previsioni.dart';
-import 'package:am029_maree/stazione.dart';
+import 'package:am029_maree/bloc/dataBloc.dart';
+import 'package:am029_maree/class/data.dart';
+import 'package:am029_maree/pages/previsioni.dart';
+import 'package:am029_maree/pages/stazione.dart';
+import 'package:am029_maree/widget/maps.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-
-import 'data.dart';
+import 'class/dataRepos.dart';
 
 void main() => runApp(MyApp());
 
@@ -34,13 +36,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Set<Marker> _markers = {};
-  List<Data> data;
+  DataBloc dataBloc;
+
   Timer timer;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
-
+  // Set<Marker> _markers = {};
+  // List<Data> data;
+/*
   Future<void> getData() async {
-    data = await fetchDataList();
+    data = await DataRepo.fetchDataList();
     setState(() {
       for (Data staz in data) {
         _markers.add(Marker(
@@ -60,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     });
   }
-
+*/
   /*void _setMarkerIcon() async {
     _markerIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(), 'assets/bb.png');
@@ -73,9 +77,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-
-    getData();
-    timer = Timer.periodic(Duration(minutes: 1), (Timer t) => getData());
+    dataBloc = DataBloc(DataRepo());
+    dataBloc.add(FetchData());
+    // getData();
+    //  timer = Timer.periodic(Duration(minutes: 1), (Timer t) => getData());
   }
 
   @override
@@ -84,48 +89,22 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Stack(
-        children: [
-          GoogleMap(
-            markers: _markers,
-            initialCameraPosition: CameraPosition(
-              target: LatLng(45.43639875136951, 12.327309251523655),
-              zoom: 13,
-            ),
-          ),
-                    Positioned(
-              top: MediaQuery.of(context).size.width * 0.055,
-              right: MediaQuery.of(context).size.width * 0.045,
-              child: IconButton(
-                iconSize: 40,
-                onPressed: () {
-                  return Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Previsioni()));
-                },
-                icon: Icon(
-                  
-                  Icons.assessment_rounded,
-                  color:Colors.black,
-                ),
-              )),
-          Positioned(
-              top: MediaQuery.of(context).size.width * 0.05,
-              right: MediaQuery.of(context).size.width * 0.05,
-              child: IconButton(
-                iconSize: 40,
-                onPressed: () {
-                  return Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Previsioni()));
-                },
-                icon: Icon(
-                  
-                  Icons.assessment_rounded,
-                  color:Color(0xff23b6e6),
-                ),
-              )),
-
-        ],
-      ),
+      body: BlocProvider(
+          create: (BuildContext context) => dataBloc,
+          child: BlocBuilder<DataBloc, DataState>(
+            builder: (context, state) {
+              if (state is DataNotLoaded) {
+                return Text("acesso al server");
+              } else if (state is DataLoading) {
+                return Center(child: CircularProgressIndicator());
+              } else if (state is DataLoaded) {
+                return Maps(
+                  data: state.getData,
+                );
+              } else
+                return Text("Error");
+            },
+          )),
     );
   }
 }

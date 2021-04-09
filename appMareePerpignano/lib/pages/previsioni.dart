@@ -1,5 +1,7 @@
-import 'package:am029_maree/data.dart';
-import 'package:am029_maree/tielsData.dart';
+import 'package:am029_maree/class/dataRepos.dart';
+import 'package:am029_maree/class/previsioni.dart';
+import 'package:am029_maree/class/previsioniRepos.dart';
+import 'package:am029_maree/class/tielsData.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +14,7 @@ class Previsioni extends StatefulWidget {
 
 class _PrevisioniState extends State<Previsioni> {
   List<FlSpot> _getSpots(List<Previsione> data) {
-    List<FlSpot> spots = List<FlSpot>();
+    List<FlSpot> spots =[];
     int i = 0;
     for (Previsione p in data) {
       spots.add(FlSpot(i.toDouble(), double.parse(p.vALORE)));
@@ -78,7 +80,7 @@ double _nMaxX(int length) {
                  width: MediaQuery.of(context).size.width * 0.98,
                 height: MediaQuery.of(context).size.height * 0.60,
                  child: FutureBuilder(
-                   future: fetchPrevisioniList(),
+                   future: PrevisioniRepo.fetchPrevisioniList(),
                    builder: (BuildContext context, AsyncSnapshot snapshot) {
                      if (snapshot.hasData) {
                        return LineChart(LineChartData(

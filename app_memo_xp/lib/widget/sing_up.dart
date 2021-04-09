@@ -16,6 +16,7 @@ class SingUp extends StatelessWidget {
                        style: TextStyle(
                   fontSize: 50,
                   fontWeight: FontWeight.w400,
+                  color: Colors.white
                 ),
        ),
        SizedBox(height: 50,),
@@ -24,16 +25,16 @@ class SingUp extends StatelessWidget {
            
            // ignore: deprecated_member_use
            child: OutlineButton.icon(
-             
+             color: Colors.white,
              highlightColor: Colors.blueGrey.shade900 ,
                 label: Text(
               'Accedi Con Google',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,color: Colors.white),
             ),
             shape: StadiumBorder(),
             padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             highlightedBorderColor: Colors.black,
-            borderSide: BorderSide(color: Colors.black),
+            borderSide: BorderSide(color: Colors.white),
             textColor: Colors.black,
             icon: FaIcon(FontAwesomeIcons.google, color: Colors.red),
             onPressed: () {

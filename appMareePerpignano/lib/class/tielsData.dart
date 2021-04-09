@@ -1,4 +1,4 @@
-import 'package:am029_maree/data.dart';
+import 'package:am029_maree/class/previsioni.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
