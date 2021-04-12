@@ -58,7 +58,6 @@ class DataBloc extends Bloc<DataEvent,DataState>{
 
   @override
   Stream<DataState> mapEventToState(DataEvent event) async*{
-    // TODO: implement mapEventToState
     if(event is FetchData){
       yield DataLoading();
       try{
