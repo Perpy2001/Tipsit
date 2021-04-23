@@ -17,8 +17,9 @@ class FetchData extends DataEvent{
 class DataState{
 @override
 List<Object> get props=>[];
-
 }
+
+
 class DataNotLoaded extends DataState{
 
 

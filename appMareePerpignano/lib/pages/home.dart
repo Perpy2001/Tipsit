@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     return Center(child: CircularProgressIndicator());
                   } else if (state is DataLoaded) {
                     return Maps(
-                      data: state.getData,
+                    data: state.getData,
                     );
                   } else
                     return Text("Error");
@@ -89,7 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                 icon: Icon(
                   Icons.assessment_rounded,
-                  color: Color(0xff23b6e6),
+                  color: Color(0xff02d39a),
                 ),
               )),
         ],

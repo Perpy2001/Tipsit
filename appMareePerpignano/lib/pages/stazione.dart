@@ -8,6 +8,7 @@ class Stazione extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     double val = double.parse(data.valore.trim().substring(0, 4));
 
     String lungStaz(String staz) {
@@ -56,7 +57,7 @@ class Stazione extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage('lib/assets/laguna.jpg'), fit: BoxFit.cover),
+              image: AssetImage('assets/laguna.jpg'), fit: BoxFit.cover),
         ),
         child: Center(
           child: Card(
