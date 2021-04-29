@@ -88,7 +88,14 @@ class _PrevisioniState extends State<Previsioni> {
                       snapshot: state.getPrevisione,
                     );
                   } else
-                    return Text("Error");
+                  return Expanded(child: Center(
+                      child: Container(
+                        child: IconButton(
+                          icon: Icon(Icons.replay_outlined),
+                          onPressed: ()=> previsioniBloc.add(FetchPrevisioni()),
+                        ),
+                      ),
+                    ));
                      },
                    ),
                     ),

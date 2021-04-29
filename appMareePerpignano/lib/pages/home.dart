@@ -60,7 +60,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     data: state.getData,
                     );
                   } else
-                    return Text("Error");
+                    return Expanded(child: Center(
+                      child: Container(
+                        child: IconButton(
+                          icon: Icon(Icons.replay_outlined),
+                          onPressed: ()=> dataBloc.add(FetchData()),
+                        ),
+                      ),
+                    ));
                 },
               )),
               
